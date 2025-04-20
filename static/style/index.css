@@ -1,0 +1,25 @@
+#map-container {
+    width: 800px;
+    height: 600px;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+  }
+
+  #map-image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: top left;
+    -webkit-user-drag: none; /* Отключаем перетаскивание изображений (webkit) */
+    -khtml-user-drag: none; /* Отключаем перетаскивание изображений (KHTML, Konqueror) */
+    -moz-user-drag: none; /* Отключаем перетаскивание изображений (Firefox) */
+    -o-user-drag: none; /* Отключаем перетаскивание изображений (Opera) */
+    user-drag: none; /* Отключаем перетаскивание изображений (стандартное свойство) */
+  }
+
+  #map-container.dragging {
+    cursor: grabbing;
+  }

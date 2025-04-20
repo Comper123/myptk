@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Вход{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'style/index.css' %}">
+{% endblock %}
+
+{% block content %}
+<div id="map-container">
+    <img id="map-image" src="https://www.g-s.ru/sites/default/files/styles/1200_foto/public/f_foto/26-shepeli_5.jpg" alt="План этажа">
+  </div>
+
+  <script>
+    const mapContainer = document.getElementById('map-container');
+    const mapImage = document.getElementById('map-image');
+    let scale = 1;
+    let translateX = 0;
+    let translateY = 0;
+
+    mapContainer.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+
+        const delta = e.deltaY || e.detail || (-1 * e.wheelDelta);
+        const zoomSpeed = 0.1;
+
+        const rect = mapContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const scaleBefore = scale;
+
+        if (delta > 0) {
+          scale -= zoomSpeed * scale;
+        } else {
+          scale += zoomSpeed * scale;
+        }
+
+        scale = Math.max(0.5, Math.min(scale, 5));
+
+        translateX += (x - rect.width / 2) * (scaleBefore - scale);
+        translateY += (y - rect.height / 2) * (scaleBefore - scale);
+
+        applyTransform();
+      }
+    });
+
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    mapContainer.addEventListener('mousedown', function(e) {
+      if (e.button === 0) {
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        mapContainer.classList.add('dragging');
+          e.preventDefault(); // Предотвращаем стандартное перетаскивание изображения
+      }
+    });
+
+    mapContainer.addEventListener('mouseup', function() {
+      isDragging = false;
+      mapContainer.classList.remove('dragging');
+    });
+
+    mapContainer.addEventListener('mouseleave', function() {
+      isDragging = false;
+      mapContainer.classList.remove('dragging');
+    });
+
+    mapContainer.addEventListener('mousemove', function(e) {
+        if (isDragging) {
+            e.preventDefault(); // Предотвращаем выделение текста
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            applyTransform();
+        }
+    });
+
+    // Предотвращаем перетаскивание изображения (альтернативный способ)
+      mapImage.addEventListener('dragstart', function(event) {
+          event.preventDefault();
+      });
+
+    function applyTransform() {
+      mapImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+    }
+  </script>
+{% endblock %}

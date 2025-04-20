@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Вход в систему{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'style/login.css' %}">
+    <link rel="stylesheet" href="{% static 'style/form.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="login">
+    <h2>Войдите в систему</h2>
+
+    <form method="post"  autocomplete="off">
+        
+        {% csrf_token %}
+        <div class="input_block">
+            {{ form.username }}
+            <label for="username">Имя пользователя</label>
+        </div>
+        <div class="input_block">
+            {{ form.password }}
+            <label for="password">Пароль</label>
+        </div>
+        <button type="submit">Войти</button>
+        <div class="help">
+            <p>Нет аккаунта?</p>
+            <a href="/register">Зарегистрируйтесь</a>
+        </div>
+    </form>
+</section>
+
+{% endblock %}

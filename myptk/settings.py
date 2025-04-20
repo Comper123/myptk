@@ -112,11 +112,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = 'static/'
+# & Настройки для статических файлов
+STATIC_URL = '/static/' 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]   
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -126,10 +124,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Дефотная модель пользователя
 AUTH_USER_MODEL = 'mysite.User'
 
-# Настройки для медиа файлов
+# & Настройки для медиа файлов
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# & Админка
 # Имя пользователя:             admin 
 # Адрес электронной почты:      admin@mail.ru
 # Пароль:                       Bdfy88_11

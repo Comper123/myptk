@@ -1,0 +1,58 @@
+/* Обнуление стилей */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto";
+}
+
+a{
+    text-decoration: none;
+}
+
+:root{
+    /* Основные цвета */
+    --main-blue: #603EF9;
+    --dark-grey: #CCCCCC;
+    --light-grey: #E9E9E9;
+
+    /* Процессы и статусы */
+    --green: #00FF26;
+    --red: #FF0000;
+    --yellow: #EEFF00;
+}
+
+.link_active{
+    background-color: var(--main-blue);
+    color: white;
+    font-weight: 700;
+}
+.link{
+    border: 2px solid #CCC;
+    font-weight: 700;
+    color: black;
+}
+header{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 90%;
+    margin: auto;
+    div{
+        height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        a{
+            height: 50px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0px 35px;
+            border-radius: 10px;
+            gap: 10px;
+        }
+    }
+}
