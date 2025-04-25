@@ -1,25 +1,162 @@
-#map-container {
-    width: 800px;
-    height: 600px;
-    overflow: hidden;
-    position: relative;
-    cursor: grab;
-  }
-
-  #map-image {
+/* #map-container {
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+  border: 3px solid var(--dark-grey);
+  margin: 30px auto;
+  >div{
     width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform-origin: top left;
-    -webkit-user-drag: none; /* Отключаем перетаскивание изображений (webkit) */
-    -khtml-user-drag: none; /* Отключаем перетаскивание изображений (KHTML, Konqueror) */
-    -moz-user-drag: none; /* Отключаем перетаскивание изображений (Firefox) */
-    -o-user-drag: none; /* Отключаем перетаскивание изображений (Opera) */
-    user-drag: none; /* Отключаем перетаскивание изображений (стандартное свойство) */
+    height: max-content;
   }
+}
 
-  #map-container.dragging {
-    cursor: grabbing;
+#map-image {
+  width: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+#start-drawing-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+}
+
+#cabinet-form {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  z-index: 10;
+}
+
+#map-container.dragging {
+  cursor: grabbing;
+}
+
+#map-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cabinet {
+  fill: rgba(255, 0, 0, 0.5);
+  stroke: black;
+  stroke-width: 1;
+  cursor: pointer; Изменяем курсор при наведении на кабинет
+} */
+
+
+.floors-number-block{
+  width: 80%;
+  display: flex;
+  gap: 20px;
+  margin: 30px auto;
+  height: 45px;
+  align-items: center;
+  div{
+    height: 100%;
+    width: max-content;
+    display: flex;
+    border: 1px solid black;
+    border-radius: 11px;
+
+    a{
+      height: 100%;
+      border: 1px solid black;
+      aspect-ratio: 1;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: .4s;
+      &:first-child{
+        border-radius: 10px 0 0 10px;
+      }
+      &:last-child{
+        border-radius: 0 10px 10px 0;
+      }
+      &:hover{
+        background-color: var(--main-blue);
+        color: white;
+        transition: .2s;
+      }
+    }
+    .floor-active{
+      background-color: var(--main-blue);
+      color: white;
+    }
+    .floor{
+      color: black;
+    }
   }
+}
+
+
+
+
+.editmode{
+  display: flex;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  gap: 12px;
+  height: 34px;
+  align-items: center;
+  p{
+    font-size: 16px;
+    line-height: 16px;
+  }
+}
+
+
+
+#map-container {
+  width: 80%;
+  height: 80vh;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #ccc;
+  cursor: grab;
+  touch-action: none; /* Важно для мобильных устройств */
+}
+
+#map-container:active {
+  cursor: grabbing;
+}
+
+.room {
+  transition: fill 0.3s;
+  cursor: pointer;
+}
+
+#map-image {
+  position: absolute;
+}
+
+.room {
+  transition: fill 0.3s;
+  cursor: pointer;
+}
+
+.room:hover {
+  fill: #d32f2f;
+  fill-opacity: 0.8;
+}

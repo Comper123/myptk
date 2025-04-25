@@ -56,3 +56,39 @@ header{
         }
     }
 }
+
+/* Стили для toogle */
+.toggle{
+    transform: translateY(-6px);
+    span{
+        width: 68px;
+        height: 34px;
+        background-color: var(--light-grey);
+        border-radius: 34px;
+        position: absolute;
+        &::before{
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background-color: white;
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            content: "";
+            transition: .6s;
+        }
+    }
+    &:hover{
+        cursor: pointer;
+    }
+    input{
+        width: 0;
+        height: 0;
+        &:checked + span{
+            background-color: var(--main-blue);
+        }
+        &:checked + span::before{
+            transform: translateX(34px);
+        }
+    }
+}

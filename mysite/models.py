@@ -15,18 +15,18 @@ class Floor(models.Model):
     description = models.TextField("Описание", null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
     
     class Meta:
-        verbose_name = "Этажи"
-        verbose_name_plural = "этаж"
+        verbose_name = "этаж"
+        verbose_name_plural = "Этажи"
         
 
 class Room(models.Model):
     """Модель кабинета"""
     floor = models.ForeignKey(Floor, on_delete=models.PROTECT, related_name="rooms")
     name = models.CharField("Номер", max_length=5)
-    coords = models.TextField("Координаты")
+    coords = models.TextField("Координаты", max_length=250, null=True, blank=True)
     description = models.TextField("Описание", null=True, blank=True)
     # & Поле лаборанта
     assistant = models.ForeignKey(
@@ -66,5 +66,5 @@ class Room(models.Model):
         return super().save(*args, **kwargs)
     
     class Meta:
-        verbose_name = "Кабинеты"
-        verbose_name_plural = "кабинет"
+        verbose_name = "кабинет"
+        verbose_name_plural = "Кабинеты"

@@ -25,6 +25,9 @@
         </div>
         <div>
             {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                <a href="/admin" class="link">Администрирование</a>
+                {% endif %}
                 <a href="/logout" class="link">Выйти</a>
                 <a href="/profile" class="link_active">
                     <i class="fa-solid fa-user"></i>
