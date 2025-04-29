@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Вход{% endblock %}
+{% block title %}Мой ПТК{% endblock %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'style/index.css' %}">
@@ -16,6 +16,10 @@
       <a href="/floor/{{ fl.name }}" class="{% if fl.name == floor.name %}floor-active{% else %}floor{% endif %}">{{ fl.name }}</a>
     {% endfor %}
   </div>
+</div>
+<div class="path">
+  <p class="path_elem current">{{ floor.name }} этаж</p>
+  <p class="separator">/</p>
 </div>
 
 <div class="map">
@@ -34,19 +38,16 @@
             preserveAspectRatio="xMidYMid meet"
             xlink:href="/media/{{ floor.image.name }}"
             id="" />
-            <!-- {% for room in floor.rooms.all %}
-              <a href="cabinets/{{ room.name }}">
+            {% for room in floor.rooms.all %}
+              <a href="{% url 'cabinet' room.name %}">
                 <path
-                  style="fill:#9c0c0c;fill-opacity:1"
+                  style="fill:var(--red);fill-opacity:0.5"
                   d="{{ room.coords }}"
                   class="room"
-                  id="path1" 
+                  data-id="{{ room.id }}"
                 />
               </a>
-              <polygon class="cabinet"
-                        data-room-id="{{ room.id }}"
-                        points=""></polygon>
-            {% endfor %} -->
+            {% endfor %}
       </svg>
     </div>
 </div>
@@ -54,91 +55,139 @@
 
 
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
   const mapContainer = document.getElementById('map-container');
   const mapImage = document.getElementById('map-image');
   const svgImage = mapImage.querySelector('image');
   const editModeToggle = document.getElementById("editModeToggle");
-
-
+  const rooms = document.querySelectorAll('.room');
+  
   // Состояние карты
   const state = {
-    scale: 1,                     // Текущий масштаб
-    minScale: 1,                  // Минимальный масштаб
-    maxScale: 4,                  // Максимальный масштаб
-    scaleCoef: 0.2,               // Коэфициент масштабирования
+    scale: 1,
+    minScale: 1,
+    maxScale: 4,
+    scaleCoef: 0.1,
     startPoint: { x: 0, y: 0 },
-    size: {width: {{ width }}, height: {{ height }}},
-    aspectRatio: {{ width }} / {{ height }}, // Пропорции изображения
-    isScaling: true,               // Возможность масштабирования
+    containerSize: {
+      width: mapContainer.clientWidth,
+      height: mapContainer.clientHeight
+    },
+    isScaling: true,
+    isPanning: false,
+    panStart: { x: 0, y: 0 },
+    editMode: false,
+    selectedRoom: null,
+    editingPoints: false,
+    currentPointIndex: -1,
+    points: []
   };
 
-
-  // Подключаем включение/выключение режима масштабирования
-  editModeToggle.addEventListener('change',() => {
-    state.isScaling = !editModeToggle.checked;
-  })
-
-  // Процедура обновления положения
-  function updateMap(mouseX, mouseY){
-    var deltaX = (mouseX / state.size.width) * (state.scale * state.size.width - state.size.width);
-    var deltaY = (mouseY / state.size.height) * (state.scale * state.size.height - state.size.height);
-
-    state.startPoint.x = -deltaX;
-    state.startPoint.y = -deltaY;
+  // Инициализация размеров
+  function initSizes() {
+    state.containerSize = {
+      width: mapContainer.clientWidth,
+      height: mapContainer.clientHeight
+    };
     
-    // Применяем смещение
-    mapImage.style.transform = `translate(${state.startPoint.x}px, ${state.startPoint.y}px)`;
-    
-    // Изменяем ширину и высоту карты
-    mapImage.style.width = `${state.size.width * state.scale}px`;
-    mapImage.style.height = `${state.size.width * state.scale / state.aspectRatio}px`;
+    mapImage.setAttribute('viewBox', `0 0 ${state.containerSize.width} ${state.containerSize.height}`);
   }
 
+  // Переключение режима редактирования
+  editModeToggle.addEventListener('change', () => {
+    state.editMode = editModeToggle.checked;
+    state.isScaling = !state.editMode;
+  });
 
-  // Добавим ивент на масштабирование и перемещение карты
-  mapContainer.addEventListener("wheel", (e) => {
-    // Игнорируем дефолтное поведение при ивенте
-    e.preventDefault();
-
-    // Перемещение по горизонтали
-    if (e.shiftKey && !e.ctrlKey){
-      // Проверяем выход за границу карты
-      if ((e.deltaY < 0 && state.startPoint.x > 0) ||
-          (e.deltaY > 0 && state.startPoint.x > state.width)){
-          state.startPoint.x = 0;
-          return;
+    // Обработчик перемещения мышью
+    mapContainer.addEventListener('mousedown', (e) => {
+      if (e.button === 0 && state.isScaling) {
+        state.isPanning = true;
+        state.panStart = { x: e.clientX, y: e.clientY };
+        mapContainer.style.cursor = 'grabbing';
       }
-      // Перемещаем карту
-      state.startPoint.x += state.size.width / 20 * (e.deltaY > 0 ? -1 : 1);
-      mapImage.style.transform = `translate(${state.startPoint.x}px, ${state.startPoint.y}px)`;
-      return;
-    }
-
-    // Масштабирование (ctrl + колесо)
-    if (e.ctrlKey && state.isScaling){
-      // Проверяем на возможность масштабирования иначе выходим из обработчика
-      if ((state.scale === state.minScale && e.deltaY > 0) || 
-          (state.scale === state.maxScale && e.deltaY < -1)) return;
-      var zoomDelta = state.scaleCoef * (e.deltaY > 0 ? -1 : 1); // Определяем величину масштабирования
-      state.scale += zoomDelta;
-      // Координаты курсора
-      let mouseX = e.clientX - mapContainer.getBoundingClientRect().left;
-      let mouseY = e.clientY - mapContainer.getBoundingClientRect().top;
-      // Обновим положение нашей карты
-      updateMap(mouseX, mouseY);
-      return;
-    }
-
-    // Перемещение по вертикали
-    if ((e.deltaY > 0 && state.startPoint.y > 0) ||
-        (e.deltaY < 0 && state.startPoint.y > state.height)){
-        // Проверяем выход за границу карты
-        state.startPoint.y = 0;
+    });
+  
+    document.addEventListener('mousemove', (e) => {
+      if (state.isPanning) {
+        const dx = e.clientX - state.panStart.x;
+        const dy = e.clientY - state.panStart.y;
+        
+        state.startPoint.x += dx;
+        state.startPoint.y += dy;
+        
+        state.panStart = { x: e.clientX, y: e.clientY };
+        constrainPosition();
+        updateTransform();
+      }
+    });
+  
+    document.addEventListener('mouseup', () => {
+      state.isPanning = false;
+      mapContainer.style.cursor = 'grab';
+    });
+  
+    // Обработчик колеса мыши
+    mapContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      
+      // Горизонтальное перемещение (shift + колесо)
+      if (e.shiftKey && !e.ctrlKey && state.isScaling) {
+        state.startPoint.x += e.deltaY * -0.5;
+        constrainPosition();
+        updateTransform();
         return;
-    } 
-    // Перемещаем карту
-    state.startPoint.y -= state.size.height / 20 * (e.deltaY > 0 ? 1 : -1);
-    mapImage.style.transform = `translate(${state.startPoint.x}px, ${state.startPoint.y}px)`;
-  })
+      }
+      
+      // Масштабирование (ctrl + колесо)
+      if (e.ctrlKey && state.isScaling) {
+        const zoomDelta = state.scaleCoef * (e.deltaY > 0 ? -1 : 1);
+        const newScale = Math.max(state.minScale, Math.min(state.maxScale, state.scale + zoomDelta));
+        
+        if (newScale !== state.scale) {
+          const mouseX = e.clientX - mapContainer.getBoundingClientRect().left;
+          const mouseY = e.clientY - mapContainer.getBoundingClientRect().top;
+          
+          const mouseXPercent = mouseX / state.containerSize.width;
+          const mouseYPercent = mouseY / state.containerSize.height;
+          
+          const scaleChange = newScale / state.scale;
+          
+          state.startPoint.x += mouseXPercent * state.containerSize.width * (1 - 1/scaleChange);
+          state.startPoint.y += mouseYPercent * state.containerSize.height * (1 - 1/scaleChange);
+          state.scale = newScale;
+          
+          constrainPosition();
+          updateTransform();
+        }
+        return;
+      }
+      
+      // Вертикальное перемещение (обычное колесо)
+      if (!e.ctrlKey && !e.shiftKey && state.isScaling) {
+        state.startPoint.y += e.deltaY * -0.5;
+        constrainPosition();
+        updateTransform();
+      }
+    });
+  
+    // Ограничение позиции
+    function constrainPosition() {
+      const maxX = (state.containerSize.width * state.scale - state.containerSize.width) / 2;
+      const maxY = (state.containerSize.height * state.scale - state.containerSize.height) / 2;
+      
+      state.startPoint.x = Math.max(-maxX, Math.min(maxX, state.startPoint.x));
+      state.startPoint.y = Math.max(-maxY, Math.min(maxY, state.startPoint.y));
+    }
+  
+    // Обновление трансформации
+    function updateTransform() {
+      mapImage.style.transform = `translate(${state.startPoint.x}px, ${state.startPoint.y}px) scale(${state.scale})`;
+    }
+  
+    // Инициализация
+    initSizes();
+    updateRoomInteractivity();
+  });
 </script>
 {% endblock %}

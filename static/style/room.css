@@ -1,0 +1,8 @@
+.roommap{
+    width: 80%;
+    margin: 20px auto;
+    .roommapimg{
+        width: 100%;
+        object-fit: cover;
+    }
+}

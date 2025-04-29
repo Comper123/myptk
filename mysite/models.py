@@ -7,6 +7,9 @@ class User(AbstractUser):
     """Кастомная модель пользователя"""
     image = models.ImageField("Фото", upload_to="users-photos/", default="users-photos/default.png")
     
+    def groups_display(self):
+        return ", ".join([str(group) for group in self.groups.all()])
+    
 
 class Floor(models.Model):
     """Модель этажа"""
@@ -28,29 +31,41 @@ class Room(models.Model):
     name = models.CharField("Номер", max_length=5)
     coords = models.TextField("Координаты", max_length=250, null=True, blank=True)
     description = models.TextField("Описание", null=True, blank=True)
+    map_image = models.ImageField("План", null=True, blank=True, upload_to="roommaps/")
+    
     # & Поле лаборанта
-    assistant = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True, 
+    assistant = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, 
         related_name="myworkroom", # ? Можно перейти от объекта лаборанта по полю 'myroom'
-        verbose_name="Лаборант кабинета"
-    )
+        verbose_name="Лаборант кабинета")
     # & Поле ответсвенного за кабинет преподавателя 
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True,
         related_name="myroom", # ? Можно перейти от объекта учителя по полю 'myroom'
-        verbose_name="Владелец кабинета"
-    )
+        verbose_name="Владелец кабинета")
+    
+    # Размеры кабинета
+    length = models.FloatField("Длина", null=True, blank=True)
+    width = models.FloatField("Ширина", null=True, blank=True)
+    height = models.FloatField("Высота", null=True, blank=True)
+    
+    # Прочие характеристики кабинета
+    windows = models.IntegerField("Количество окон", null=True, blank=True)
+    lamps = models.IntegerField("Количество ламп", null=True, blank=True)
+    workspace_count = models.IntegerField("Количество рабочих мест", null=True, blank=True)
+    
+    def volume(self):
+        """Метод определения объема"""
+        return int(self.width * self.height * self.length)
+    
+    def area(self):
+        """Метод вычисления площади"""
+        return int(self.length * self.width)
     
     def __str__(self):
+        """Метод строкового представления кабинета"""
         return self.name
 
     def save(self, *args, **kwargs):
+        """Метод сохранения объекта кабинета"""
         # ? Установим ограничение на установку в качестве лаборантов только их
         if self.assistant:
             if not self.assistant.groups.filter(name="Лаборанты").exists():

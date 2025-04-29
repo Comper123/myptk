@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Кабинет {{ room.name }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'style/room.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="path">
+    <a class="path_elem" href="/floor/{{ room.floor.name }}">{{ room.floor.name }} этаж</a>
+    <p class="separator">/</p>
+    <p class='path_elem'>Кабинет {{ room.name }}</p>
+</div>
+
+<!-- Если есть карта план -->
+{% if room.map_image %}
+<div class="roommap">
+    <img src="/media/{{ room.map_image }}" alt="" class="roommapimg">
+</div>
+{% endif %}
+
+<!-- Остальные блоки страницы кабинета -->
+<nav class="tabs_links" id="tabs_links">
+    <a id="assistants_requests_link" class="active" data-id="1">Заявки лаборантов</a>
+    <a id="devices_link" data-id="2">Оборудование</a>
+    <a id="room_info_link" data-id="3">О кабинете</a>
+</nav>
+
+<section class="tabs" id="tabs">
+    <div id="assistants_requests_block" class="active_tab">
+
+    </div>
+    <div id="devices_block">
+
+    </div>
+    <div id="room_info_block">
+        
+    </div>
+</section>
+<script src="{% static 'js/tabs.js' %}"></script>
+{% endblock %}

@@ -13,6 +13,7 @@ a{
 :root{
     /* Основные цвета */
     --main-blue: #603EF9;
+    --main-blue-opacity: #603ef9b6;
     --dark-grey: #CCCCCC;
     --light-grey: #E9E9E9;
 
@@ -32,6 +33,8 @@ a{
     font-weight: 700;
     color: black;
 }
+
+/* Стили для header */
 header{
     display: flex;
     justify-content: space-between;
@@ -90,5 +93,73 @@ header{
         &:checked + span::before{
             transform: translateX(34px);
         }
+    }
+}
+
+/* Строка пути */
+.path{
+    width: 80%;
+    margin: 20px auto;
+    display: flex;
+    gap: 5px;
+    .path_elem,
+    .separator{
+        font-size: 20px;
+        font-weight: 600;
+    }
+    a{
+        color: var(--main-blue);
+        transition: .4s;
+        &:hover{
+            text-decoration: underline;
+            transition: .4s;
+        }
+    }
+    .current{
+        color: black;
+    }
+}
+
+/* Общие стили для табов */
+.tabs_links{
+    width: 80%;
+    margin: 20px auto;
+    display: flex;
+    flex-wrap: wrap;
+    a{
+        padding: 0 30px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: max-content;
+        font-size: 18px;
+        font-weight: 500;
+        transition: .4s;
+        border-radius: 10px 10px 0 0;
+        cursor: pointer;
+        &:hover{
+            transition: .4s;
+            background-color: #ccc;
+        }
+        &:not(.active){
+            border-bottom: 2px solid var(--dark-grey);
+        }
+    }
+    .active{
+        border-top: 2px solid var(--dark-grey);
+        border-left: 2px solid var(--dark-grey);
+        border-right: 2px solid var(--dark-grey);
+    }
+}
+
+.tabs{
+    width: 80%;
+    margin: 0px auto;
+    div{
+        display: none;
+    }
+    .active_tab{
+        display: flex;
     }
 }

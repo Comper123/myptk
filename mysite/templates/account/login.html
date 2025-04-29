@@ -5,8 +5,8 @@
 {% block title %}Вход в систему{% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'style/login.css' %}">
-    <link rel="stylesheet" href="{% static 'style/form.css' %}">
+    <link rel="stylesheet" href="{% static 'style/account/login.css' %}">
+    <link rel="stylesheet" href="{% static 'style/base/form.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,6 @@
     <h2>Войдите в систему</h2>
 
     <form method="post"  autocomplete="off">
-        
         {% csrf_token %}
         <div class="input_block">
             {{ form.username }}
