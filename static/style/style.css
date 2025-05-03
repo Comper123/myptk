@@ -8,6 +8,7 @@
 
 a{
     text-decoration: none;
+    color: inherit;
 }
 
 :root{
@@ -155,9 +156,11 @@ header{
 
 .tabs{
     width: 80%;
+    height: max-content;
     margin: 0px auto;
-    div{
+    >div{
         display: none;
+        height: 200px;
     }
     .active_tab{
         display: flex;

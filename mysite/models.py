@@ -83,3 +83,71 @@ class Room(models.Model):
     class Meta:
         verbose_name = "кабинет"
         verbose_name_plural = "Кабинеты"
+
+
+class CabinetPhoto(models.Model):
+    """Модель фотографии кабинета"""
+    room = models.ForeignKey(Room, on_delete=models.PROTECT, related_name="images")
+    image = models.ImageField("Фотография", upload_to="roomimages/")
+    upload_at = models.DateField("Дата добавления", auto_now_add=True) # при создании добавляем дату обновления
+
+    def __str__(self):
+        return self.image.name
+
+    class Meta:
+        verbose_name = "фото кабитнета"
+        verbose_name_plural = "Фото кабинетов"
+
+
+class EquipmentType(models.Model):
+    """Модель типа оборудования кабинета"""
+    name = models.CharField("Название", max_length=100) # Название оборудования пр. Компьютер / Ноутбук
+    description = models.TextField(blank=True)
+    attributes_schema = models.JSONField(default=dict) # Схема атрибутов типа оборудования
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = "Типы оборудования"
+        verbose_name_plural = "Тип оборудования"
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    
+class Equipment(models.Model):
+    """Модель оборудования"""
+    STATUS_CHOICES = [
+        ('working', "Исправен"),
+        ('repair', "В ремонте"),
+        ('broken', "Неисправен")
+    ]
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
+    type = models.ForeignKey(EquipmentType, on_delete=models.PROTECT, verbose_name="Тип оборудования")
+    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Кабинет")
+    inventory_number = models.CharField("Инвентарный номер", max_length=50, unique=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='working')
+    # ^ Не активное оборудование = списанное (is_active=False -> Списанное оборудование)
+    is_active = models.BooleanField("Состоит на учете", default=True)
+    purchase_date = models.DateField("Дата покупки", null=True, blank=True)
+    # & Характеристики оборудования в соответствии с типом оборудования
+    attributes = models.JSONField("Характеристики", default=dict)
+    created_at = models.DateTimeField("Дата добавления", auto_now_add=True)
+    updated_at = models.DateTimeField("Дата изменения", auto_now=True)
+    image = models.ImageField("Фотография", upload_to="equipmentimages/", default="equipmentimages/default.png")
+    
+    def type_name(self):
+        return self.type.name
+    
+    def __str__(self):
+        return self.type.name + self.inventory_number
+
+    class Meta:
+        verbose_name = "Оборудование"
+        verbose_name_plural = "оборудование"
+        

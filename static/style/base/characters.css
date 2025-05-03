@@ -1,0 +1,36 @@
+.haracteristic_block{
+    width: 80%;
+    margin: 0 auto 30px auto;
+    .haracteristic_block_name{
+        font-size: 24px;
+        padding: 6px 20px;
+        border-radius: 4px;
+        width: 100%;
+        /* background-color: var(--light-grey); */
+        font-weight: 500;
+        margin-bottom: 20px;
+    }
+    .haracteristic{
+        display: flex;
+        width: 100%;
+        height: 40px;
+        margin-bottom: 10px;
+        gap: 6px;
+        font-size: 18px;
+        >*{
+            height: 20px;
+        }
+        .haracteristic_name{
+            padding: 0 0 0 20px;
+            text-wrap: nowrap;
+        }
+        .haracteristic_separator{
+            
+            width: 100%;
+            border-bottom: dotted 3px var(--dark-grey);
+        }
+        .haracteristic_value{
+            color: var(--dark-grey);
+        }
+    }
+}

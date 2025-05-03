@@ -1,17 +1,19 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 from . forms import LoginForm, RegisterForm
 from . import models
-import json
 
 
 def index(request, floor_id):
-    """Обработчик главной страницы"""
+    """
+    Обработчик главной страницы
+    """
     floor = models.Floor.objects.get(name=floor_id)
     data = {
         "floor": floor,
@@ -23,7 +25,9 @@ def index(request, floor_id):
 
 
 def register_view(request):
-    """Обработчик регистрации в системе"""
+    """
+    Обработчик регистрации в системе
+    """
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -34,7 +38,9 @@ def register_view(request):
     
     
 def login_view(request):
-    """Обработчик страницы авторищзации в системе"""
+    """
+    Обработчик страницы авторищзации в системе
+    """
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -48,7 +54,9 @@ def login_view(request):
 
 
 def logout_view(request):
-    """Обработчик для выхода из системы"""
+    """
+    Обработчик для выхода из системы
+    """
     logout(request)
     messages.info(request, "Вы вышли из системы.")
     return redirect('login') # Перенаправляем на страницу входа
@@ -60,6 +68,28 @@ def cabinet_view(request, cab):
     }
     return render(request, "cabinet.html", data)
 
-# TODO: Запретить не админам
-def confirm_user(request, user_id):
-    pass
+
+@csrf_exempt # Отключаем CSRF для этого view (НЕ рекомендуется для продакшена, но необходимо для AJAX)
+def confirm_user_ajax(request, user_id):
+    """
+    Обработчик AJAX для подтверждения пользователя.
+    """
+    if request.method == 'POST': #  Убеждаемся, что это POST запрос
+        try:
+            User = get_user_model()  # Получаем модель User
+            user = User.objects.get(pk=user_id)  #  Получаем пользователя по ID
+
+            if user.last_login is None and not user.is_active:
+                user.is_active = True  #  Активируем пользователя
+                user.save()
+
+                return JsonResponse({'status': 'success', 'message': 'Пользователь подтвержден.'})
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Пользователь уже подтвержден.'}, status=400) #  400 -  Bad Request
+
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Пользователь не найден.'}, status=404)  #  404 - Not Found
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500) # 500 - Internal Server Error
+
+    return JsonResponse({'status': 'error', 'message': 'Неверный метод запроса.'}, status=405) # 405 - Method Not Allowed

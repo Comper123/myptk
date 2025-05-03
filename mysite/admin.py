@@ -1,9 +1,19 @@
 from django.contrib import admin
-
-from . models import Floor, Room, User
+from django_json_widget.widgets import JSONEditorWidget
 from django.utils.html import format_html
 from django.urls import reverse
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.db.models import JSONField
+
+from . models import (
+    Floor, 
+    Room, 
+    User, 
+    CabinetPhoto,
+    Equipment,
+    EquipmentType
+)
+
 
 @admin.register(Floor)
 class FloorAdmin(admin.ModelAdmin):
@@ -22,12 +32,13 @@ class UserAdmin(BaseUserAdmin):
     
     def confirm_button(self, obj):
         if obj.last_login is None and not obj.is_active:
-            url = reverse('confirm_user', args=[obj.pk]) 
+            #  Собираем URL для AJAX запроса (важно)
+            url = reverse('confirm_user_ajax', args=[obj.pk])  #  Используем reverse
             return format_html(
-                '<a class="button" href="{}">Подтвердить</a>',
+                '<button class="button confirm-user-button" data-url="{}">Подтвердить</button>',
                 url,
             )
-        return '-' 
+        return '-'
 
     confirm_button.short_description = 'Подтвердить'
     
@@ -38,3 +49,32 @@ class UserAdmin(BaseUserAdmin):
         # Include last_login and groups in the queryset. Required for the filter and display.
         qs = super().get_queryset(request)
         return qs
+    
+    class Media:
+        js = ('/static/js/userConfirm.js',)
+        
+
+# Админка изображений кабинета
+@admin.register(CabinetPhoto)
+class RoomPhotoAdmin(admin.ModelAdmin):
+    list_display = ("image", "upload_at")
+
+
+# Админка типов оборудования
+@admin.register(EquipmentType)
+class EquipmentTypeAdmin(admin.ModelAdmin):
+    list_display = ("name", "description")
+    
+    formfield_overrides = {
+        JSONField: {'widget': JSONEditorWidget},
+    }
+
+
+# Админка для оборудования
+@admin.register(Equipment)
+class EquipmentAdmin(admin.ModelAdmin):
+    list_display = ("inventory_number", "type_name", "is_active", "room")
+    
+    formfield_overrides = {
+        JSONField: {'widget': JSONEditorWidget},
+    }

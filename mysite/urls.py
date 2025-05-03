@@ -9,5 +9,5 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('cabinets/<str:cab>', views.cabinet_view, name="cabinet"),
     path('register/', views.register_view, name="register"),
-     path('admin/confirm_user/<int:user_id>/', views.confirm_user, name='confirm_user'),
+    path('confirm_user/<int:user_id>/', views.confirm_user_ajax, name='confirm_user_ajax'),
 ]

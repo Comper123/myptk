@@ -6,6 +6,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'style/room.css' %}">
+    <link rel="stylesheet" href="{% static 'style/base/characters.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -27,18 +28,150 @@
     <a id="assistants_requests_link" class="active" data-id="1">Заявки лаборантов</a>
     <a id="devices_link" data-id="2">Оборудование</a>
     <a id="room_info_link" data-id="3">О кабинете</a>
+    <a id="photos_link" data-id="4">Фотографии</a>
 </nav>
 
 <section class="tabs" id="tabs">
-    <div id="assistants_requests_block" class="active_tab">
+    <div id="assistants_requests_block" class="tab active_tab">
 
     </div>
-    <div id="devices_block">
+    <div id="devices_block" class="tab">
 
     </div>
-    <div id="room_info_block">
-        
+    <div id="room_info_block" class="tab">
+        <div class="haracteristic_block">
+            <p class="haracteristic_block_name">Общие</p>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Номер</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.name }}</p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Этаж</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.floor.name }}</p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Описание</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">
+                    {% if room.description %}
+                        {{ room.description }}
+                    {% else %}
+                        Нет
+                    {% endif %}
+                </p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Лаборант</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">
+                    {% if room.assistant %}
+                        {{ room.assistant.first_name }} {{ room.assistant.last_name }}
+                    {% else %}
+                        Нет
+                    {% endif %}
+                </p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Ответственный преподаватель</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">
+                    {% if room.owner %}
+                        {{ room.owner.first_name }} {{ room.owner.last_name }}
+                    {% else %}
+                        Нет
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="haracteristic_block">
+            <p class="haracteristic_block_name">Размеры</p>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Ширина</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.width }}</p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Длина</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.length }}</p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Высота</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.height }}</p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Площадь</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.area }}</p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Объем</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.volume }}</p>
+            </div>
+        </div>
+        <div class="haracteristic_block">
+            <p class="haracteristic_block_name">Прочие</p>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Количество окон</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.windows }}</p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Количество ламп</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.lamps }}</p>
+            </div>
+            <div class="haracteristic">
+                <p class="haracteristic_name">Количество рабочих мест</p>
+                <span class="haracteristic_separator"></span>
+                <p class="haracteristic_value">{{ room.workspace_count }}</p>
+            </div>
+        </div>
+    </div>
+    <div id="photos" class="tab">
+        <div class="slider">
+            <div class="slider_images">
+                <div class="slider_container">
+                    {% for im in room.images.all %}
+                    <img src="/media/{{ im.image }}" alt="" class="{% if forloop.counter == 1 %}active img{% else %}img{% endif %}">
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="slider_indicators">
+                {% for im in room.images.all %}
+                    <a onclick="toSlide({{ forloop.counter }})"><img src="/media/{{ im.image }}" alt="" class="{% if forloop.counter == 1 %}active indicator{% else %}indicator{% endif %}"></a>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </section>
+<script>
+    const slider_indicators_block = document.querySelector(".slider_indicators");
+    const slider_indicators = slider_indicators_block.querySelectorAll(".indicator");
+    
+    const slider_images_block = document.querySelector(".slider_container");
+    const slider_images = slider_images_block.querySelectorAll(".img");
+    
+    
+    function toSlide(slide){
+        // Сбросим старые изображения
+        for (let i = 0; i < slider_images.length; i++){
+            slider_images[i].classList = "img";
+        }
+        // Установим новое изображение
+        slider_images[slide - 1].classList = "img active";
+    
+        // Сбросим старые кнопки
+        for (let i = 0; i < slider_indicators.length; i++){
+            slider_indicators[i].classList = "indicator";
+        }
+        // Установим новое изображение
+        slider_indicators[slide - 1].classList = "indicator active";
+    }
+</script>
 <script src="{% static 'js/tabs.js' %}"></script>
 {% endblock %}
