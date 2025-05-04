@@ -6,6 +6,9 @@
         object-fit: cover;
     }
 }
+#devices_block{
+    height: max-content;
+}
 #room_info_block{
     flex-direction: column;
     >div{

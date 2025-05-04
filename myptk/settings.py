@@ -29,10 +29,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Подключим наше основное приложение
     'mysite',
+    # Подключим приложение API
+    'api',
     # Добавим необходимые зависимости в наш проект
-    'rest_framework', # Для работы с api
-    'django_cleanup', # Для удаления фотографий при удалении объектов
-    'django_json_widget' # для удобного редактирования JSON полей
+    'rest_framework',                    # Для работы с api
+    'django_cleanup',                    # Для удаления фотографий при удалении объектов
+    'django_json_widget'                 # для удобного редактирования JSON полей
 ]
 
 MIDDLEWARE = [

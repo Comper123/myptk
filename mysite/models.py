@@ -102,8 +102,8 @@ class CabinetPhoto(models.Model):
 class EquipmentType(models.Model):
     """Модель типа оборудования кабинета"""
     name = models.CharField("Название", max_length=100) # Название оборудования пр. Компьютер / Ноутбук
-    description = models.TextField(blank=True)
-    attributes_schema = models.JSONField(default=dict) # Схема атрибутов типа оборудования
+    description = models.TextField("Описание", blank=True)
+    attributes_schema = models.JSONField("Характеристики", default=dict) # Схема атрибутов типа оборудования
     
     def __str__(self):
         return self.name
@@ -111,13 +111,6 @@ class EquipmentType(models.Model):
     class Meta:
         verbose_name = "Типы оборудования"
         verbose_name_plural = "Тип оборудования"
-
-
-class Company(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
 
     
 class Equipment(models.Model):
@@ -127,7 +120,6 @@ class Equipment(models.Model):
         ('repair', "В ремонте"),
         ('broken', "Неисправен")
     ]
-    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
     type = models.ForeignKey(EquipmentType, on_delete=models.PROTECT, verbose_name="Тип оборудования")
     room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Кабинет")
     inventory_number = models.CharField("Инвентарный номер", max_length=50, unique=True)
@@ -140,6 +132,7 @@ class Equipment(models.Model):
     created_at = models.DateTimeField("Дата добавления", auto_now_add=True)
     updated_at = models.DateTimeField("Дата изменения", auto_now=True)
     image = models.ImageField("Фотография", upload_to="equipmentimages/", default="equipmentimages/default.png")
+    coords = models.CharField("Координаты", max_length=100, null=True, blank=False)
     
     def type_name(self):
         return self.type.name

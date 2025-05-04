@@ -33,6 +33,15 @@ a{
     border: 2px solid #CCC;
     font-weight: 700;
     color: black;
+    padding: 10px 25px;
+    border-radius: 10px;
+    transition: .4s;
+    &:hover{
+        transition: .4s;
+        background-color: var(--main-blue);
+        border: 2px solid var(--main-blue);
+        color: white;
+    }
 }
 
 /* Стили для header */

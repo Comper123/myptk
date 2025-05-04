@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Добавить оборудование{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'style/addform.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="formblock">
+    <h1 class="mb-4">Добавьте оборудование</h1>
+    
+    <form id="equipmentForm">
+        <div class="basefields">
+            <div class="">
+                <label for="equipmentType" class="form-label">Тип оборудования<span class="text-danger"> *</span></label>
+                <select class="active-select" id="equipmentType" required>
+                    <option value="">Выберите тип</option>
+                </select>
+            </div>
+            <div class="input_block">
+                <input type="text" class="form-control" id="inventoryNumber" required>
+                <label for="inventoryNumber" class="form-label">Инвентарный номер<span class="text-danger"> *</span></label>
+            </div>
+        </div>
+
+        <div id="dynamicFieldsContainer">
+            <!-- Сюда подгружаются динамические поля -->
+        </div>
+
+        <div class="formbuttons">
+            <button type="submit" class="btn btn-primary" id="submitBtn">Добавить</button>
+        </div>
+    </form>
+</div>
+<script src="{% static 'js/equipmentForm.js' %}"></script>
+{% endblock %}

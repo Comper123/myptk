@@ -1,0 +1,274 @@
+@media screen and (min-width: 1281px) {
+    form{
+        width: 30%;
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    form{
+        width: 40%;
+    }
+}
+
+@media screen and (max-width: 720px) {
+    form{
+        width: 55%;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    form{
+        width: 90%;
+        font-size: 14px;
+    }
+}
+
+.formblock{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    form{
+        margin-top: 50px;
+        margin-bottom: 300px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="number"]{
+            border: 2px solid var(--dark-grey);
+            border-radius: 8px;
+            padding-left: 12px;
+            height: 50px;
+            width: 100%;
+        }
+        .active-select{
+            background-color: var(--main-blue);
+            color: white;
+            font-weight: 500;
+            border: none;
+            option{
+                background-color: white;
+            }
+        }
+        select{
+            font-size: 1em;
+            border: 2px solid var(--dark-grey);
+            /* color: var(--dark-grey); */
+            border-radius: 8px;
+            padding-left: 12px;
+            height: 50px;
+            width: 100%;
+            /* font-weight: 600; */
+            &:focus{
+                outline: none;
+            }
+            option{
+                color: black !important;
+            }
+        }
+        button{
+            background-color: var(--main-blue-opacity);
+            height: 50px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+            padding: 10px 25px;
+            transition: .4s;
+            &:hover{
+                background-color: var(--main-blue);
+            }
+        }
+        .help{
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            width: 100%;
+            justify-content: center;
+            a:hover{
+                text-decoration: underline;
+            }
+            a:visited{
+                color: var(--main-blue);
+            }
+        }
+        .checkbox-container{
+            display: flex;
+            width: 100%;
+            height: 40px;
+            align-items: center;
+            gap: 20px;
+        }
+        .list-container{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            .list-container-header{
+                height: 30px;
+                align-items: center;
+                display: flex;
+                margin-bottom: 10px;
+                gap: 20px;
+                button{
+                    height: 30px !important;
+                    width: 30px !important;
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+            .list-container-body{
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                .removeBtn{
+                    height: 30px !important;
+                    width: 30px !important;
+                    padding: 0;
+                    align-self: flex-end;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                >div,
+                >div>div{
+                    display: flex;
+                    flex-direction: row !important;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                    >div{
+                        display: flex;
+                        flex-wrap: wrap;
+                        flex-direction: column;
+                        input,
+                        select{
+                            width: max-content;
+                            height: 30px !important;
+                            font-size: .8em !important;
+                        }
+                    }
+                }
+            }
+        }
+        .checklist-container{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            label{
+                width: max-content;
+                text-wrap: nowrap;
+            }
+            >div{
+                height: 40px;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                .checkbox-text-label{
+                    transform: translateX(74px);
+                }
+                >div{
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    div{
+                        margin-left: 120px;
+                    }
+                }
+                
+            }
+        }
+        .input_block{
+            position: relative;
+            width: 100%;
+            height: 50px;
+            &.smallrow{
+                height: 30px;
+                margin-top: 6px;
+            }
+            &.middlerow{
+                height: 40px;
+                margin-top: 6px;
+            }
+            input, select{
+                width: 100%;
+                height: 100%;
+                font-size: 1em;
+                &:focus,
+                &.empty-on-blur{
+                    border: none;
+                    outline: 2px solid var(--main-blue);
+                }
+                
+            }
+            input{
+                &:focus ~ label,
+                &.empty-on-blur ~ label{
+                    transform: translateY(-2.3em);
+                    color: var(--main-blue);
+                    transition: .4s;
+                }
+            }
+            input.smallinput{
+                &:focus ~ label,
+                &.empty-on-blur ~ label{
+                    transform: translateY(-1.6em);
+                    color: var(--main-blue);
+                    transition: .4s;
+                }
+            }
+            select{
+                &:focus ~ label,
+                &.empty-on-blur ~ label{
+                    color: var(--main-blue);
+                    transition: .4s;
+                }
+            }
+            label{
+                position: absolute;
+                z-index: 100;
+                pointer-events: none;
+                left: 6px;
+                padding: 0 6px;
+                transition: .4s;
+                font-weight: 600;
+                font-size: 1em;
+                background-color: white;
+                color: var(--dark-grey);
+                
+            }
+            input ~ label{
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            select ~ label{
+                top: -12px;
+            }
+        }
+        .basefields, #dynamicFieldsContainer{
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            >div{
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+        }
+        .formbuttons{
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+}
+
+.text-danger{
+    color: red;
+}

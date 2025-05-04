@@ -69,12 +69,12 @@ def cabinet_view(request, cab):
     return render(request, "cabinet.html", data)
 
 
-@csrf_exempt # Отключаем CSRF для этого view (НЕ рекомендуется для продакшена, но необходимо для AJAX)
+@csrf_exempt # Отключаем CSRF для этого view
 def confirm_user_ajax(request, user_id):
     """
     Обработчик AJAX для подтверждения пользователя.
     """
-    if request.method == 'POST': #  Убеждаемся, что это POST запрос
+    if request.method == 'POST':
         try:
             User = get_user_model()  # Получаем модель User
             user = User.objects.get(pk=user_id)  #  Получаем пользователя по ID
@@ -93,3 +93,10 @@ def confirm_user_ajax(request, user_id):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500) # 500 - Internal Server Error
 
     return JsonResponse({'status': 'error', 'message': 'Неверный метод запроса.'}, status=405) # 405 - Method Not Allowed
+
+
+def addEquipment(request):
+    """
+    Обработчик страницы добавления фильма
+    """
+    return render(request, "addequipment.html")

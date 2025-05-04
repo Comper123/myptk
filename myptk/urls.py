@@ -6,7 +6,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include("mysite.urls"))
+    # Ссылки основного приложения
+    path('', include("mysite.urls")),
+    # Ссылки для API
+    path('api/', include("api.urls"))
 ]
 
 if settings.DEBUG:
