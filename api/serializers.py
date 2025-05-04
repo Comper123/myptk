@@ -13,56 +13,59 @@ class EquipmentTypeSerializer(serializers.ModelSerializer):
     
     
 class EquipmentCreateSerializer(serializers.ModelSerializer):
-    type_id = serializers.PrimaryKeyRelatedField(
-        queryset=EquipmentType.objects.all(),
-        source='type',
-        write_only=True
-    )
+    # type_id = serializers.PrimaryKeyRelatedField(
+    #     queryset=EquipmentType.objects.all(),
+    #     source='type',
+    #     write_only=True
+    # )
     
     class Meta:
         model = Equipment
-        fields = [
-            'id', 'type_id', 'inventory_number', 
-            'status', 'attributes', 'created_at'
-        ]
-        extra_kwargs = {
-            'status': {'required': False, 'default': 'working'},
-            'created_at': {'read_only': True}
-        }
+        fields = ['type', 'inventory_number', 'attributes']
     
-    def validate(self, data):
-        equipment_type = data.get('type')
-        attributes = data.get('attributes', {})
+    def validate(self, attrs):
+        print(attrs)
+        typeName = attrs.get('type')
+        attributes = attrs.get('attributes', {})
         
-        if not equipment_type:
-            raise serializers.ValidationError("Тип оборудования обязателен")
+        if not typeName:
+            raise serializers.ValidationError(
+                {"type": "Тип оборудования обязателен"}
+            )
+        equipment_type = EquipmentType.objects.get(name=typeName)
         
-        # Валидация характеристик по схеме типа
-        self.validate_attributes(equipment_type.attributes_schema, attributes)
+        # Валидация атрибутов по схеме типа
+        self._validate_attributes(equipment_type.attributes_schema, attributes)
         
-        return data
+        return attrs
     
-    def validate_attributes(self, schema, attributes):
+    def validate_attributes(self, value):
+        """
+        Переопределяем базовую валидацию
+        """
+        if not isinstance(value, dict):
+            raise serializers.ValidationError("Атрибуты должны быть в виде словаря")
+        return value
+    
+    def _validate_attributes(self, schema, attributes):
+        """
+        Валидация характеристик оборудования по схеме типа
+        """
+        errors = {}
+        # Проверка обязательных полей
         for field, config in schema.items():
             if config.get('required', False) and field not in attributes:
-                raise serializers.ValidationError(
-                    {f"attributes.{field}": "Это поле обязательно"}
-                )
+                errors[field] = "Это поле обязательно"
             
-            # Дополнительная валидация для списков
+            # Валидация списков
             if config.get('type') == 'list' and field in attributes:
                 if not isinstance(attributes[field], list):
-                    raise serializers.ValidationError(
-                        {f"attributes.{field}": "Должен быть списком"}
-                    )
-                
-                # Валидация элементов списка
-                if 'fields' in config:
-                    for item in attributes[field]:
+                    errors[field] = "Должен быть списком"
+                elif 'fields' in config:
+                    for i, item in enumerate(attributes[field]):
                         for sub_field, sub_config in config['fields'].items():
                             if sub_config.get('required', False) and sub_field not in item:
-                                raise serializers.ValidationError(
-                                    {f"attributes.{field}.{sub_field}": "Это поле обязательно в списке"}
-                                )
+                                errors[f"{field}[{i}].{sub_field}"] = "Это поле обязательно в списке"
         
-        return attributes
+        if errors:
+            raise serializers.ValidationError({"attributes": errors})

@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", async function (){
             switch (fieldConfig.type) {
                 case 'select':
                     input = document.createElement('select');
+                    input.name = fieldName;
                     if (fieldConfig.options) {
                         if (!fieldConfig.required) {
                             const emptyOption = document.createElement('option');
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async function (){
                             input.appendChild(option);
                         });
                     }
-                    fieldGroup.className = "input_block";
+                    fieldGroup.className = "input_block form-group";
                     break;
 
                 case 'number':
@@ -78,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async function (){
                     if (fieldConfig.min || fieldConfig.min == 0) input.min = fieldConfig.min;
                     if (fieldConfig.max || fieldConfig.min == 0) input.max = fieldConfig.max;
                     if (fieldConfig.step) input.step = fieldConfig.step;
-                    fieldGroup.className = "input_block";
+                    fieldGroup.className = "input_block form-group";
                     break;
                 
                 case 'checkbox':
@@ -115,6 +116,7 @@ document.addEventListener("DOMContentLoaded", async function (){
                     checkboxContainer.appendChild(toggleLabel);
                     fieldGroup.appendChild(checkboxContainer);
                     dynamicFieldsContainer.appendChild(fieldGroup);
+                    fieldGroup.className = "form-group";
                     break;
 
                 case 'list':
@@ -125,13 +127,11 @@ document.addEventListener("DOMContentLoaded", async function (){
                 // !! Переписать немного под стили адаптировать
                 case 'checklist':
                     const checklistContainer = document.createElement('div');
-                    checklistContainer.className = 'checklist-container mb-3';
-                    checklistContainer.setAttribute('data-field', fieldName);
-                    checklistContainer.setAttribute('data-type', 'checklist');
+                    checklistContainer.name = fieldName;
                     if (fieldConfig.required) {
                         checklistContainer.setAttribute('data-required', 'true');
                     }
-                    checklistContainer.className = 'checklist-container mb-3';
+                    checklistContainer.className = 'checklist-container form-group';
                     
                     // Заголовок чеклиста
                     const checklistLabel = document.createElement('label');
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", async function (){
                         
                         // Текст метки
                         const textLabel = document.createElement('label');
-                        textLabel.className = 'checkbox-text-label flex-grow-1';
+                        textLabel.className = 'checkbox-text-label';
                         textLabel.htmlFor = input.id;
                         textLabel.textContent = option.label;
                         itemContent.appendChild(textLabel);
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", async function (){
                             countContainer.className = 'input_block middlerow';
                             
                             const countLabel = document.createElement('label');
-                            countLabel.className = 'me-2 small';
+                            countLabel.className = 'small';
                             countLabel.textContent = 'Кол-во:';
                             
                             const countInput = document.createElement('input');
@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", async function (){
                 default:
                     input = document.createElement('input');
                     input.type = 'text';
-                    fieldGroup.className = "input_block";
+                    fieldGroup.className = "input_block form-group";
                     
             }
             if (input) {
@@ -234,6 +234,7 @@ document.addEventListener("DOMContentLoaded", async function (){
     
                     input.id = `attr_${fieldName}`;
                     input.name = fieldName;
+
                     if (input.required){
                         input.required = fieldConfig.required;
                     }
@@ -268,45 +269,64 @@ document.addEventListener("DOMContentLoaded", async function (){
     // Собиратель данных с полей
     function collectFormData() {
         const formData = {
-            type: document.getElementById('equipmentType').value,
+            type: typeSelect.innerText,
             inventory_number: document.getElementById('inventoryNumber').value,
             attributes: {}
         };
     
         // Собираем данные с динамических полей
-        document.querySelectorAll('#dynamicFieldsContainer [data-field]').forEach(element => {
-            const fieldName = element.getAttribute('data-field');
-            const fieldType = element.getAttribute('data-type');
-    
-            if (fieldType === 'checklist') {
-                // Обработка чеклиста
+        const fieldGroups = document.querySelectorAll('#dynamicFieldsContainer .form-group');
+        
+        fieldGroups.forEach(group => {
+            // Обработка чеклистов
+            if (group.className.indexOf('checklist-container') !== -1) {
                 const checkedItems = {};
-                element.querySelectorAll('.checklist-item').forEach(item => {
+                group.querySelectorAll('.checklist-item').forEach(item => {
                     const checkbox = item.querySelector('input[type="checkbox"]');
                     if (checkbox && checkbox.checked) {
                         const countInput = item.querySelector('input[type="number"]');
-                        checkedItems[checkbox.value] = countInput ? parseInt(countInput.value) : true;
+                        const value = countInput ? parseInt(countInput.value) : true;
+                        checkedItems[checkbox.value || checkbox.name] = value;
                     }
                 });
-                formData.attributes[fieldName] = checkedItems;
-            } else if (fieldType === 'list') {
-                // Обработка списка
+                formData.attributes[group.name] = checkedItems;
+            }
+            // Обработка списков
+            else if (group.className.indexOf("list-container") !== -1) {
                 const items = [];
-                element.querySelectorAll('.list-item').forEach(item => {
+                group.querySelectorAll('.list-item').forEach(item => {
                     const itemData = {};
-                    item.querySelectorAll('[data-subfield]').forEach(field => {
-                        const subField = field.getAttribute('data-subfield');
-                        itemData[subField] = field.value;
+                    item.querySelectorAll('input, select').forEach(field => {
+                        const subField = field.name;
+                        if (subField !== undefined) {
+                            itemData[subField] = field.type === 'number' ? 
+                                                parseFloat(field.value) : 
+                                                field.value;
+                        }
                     });
-                    items.push(itemData);
+                    if (Object.keys(itemData).length > 0) {
+                        items.push(itemData);
+                    }
                 });
-                formData.attributes[fieldName] = items;
-            } else {
-                // Обработка обычных полей
-                if (element.type === 'checkbox') {
-                    formData.attributes[fieldName] = element.checked;
+                if (items.length > 0) {
+                    formData.attributes[group.name] = items;
+                }
+            }
+            // Обработка обычных полей
+            else {
+                const input = group.querySelector('input');
+                if (input) {
+                    const fieldName = input.name;
+                    if (input.type === 'checkbox') {
+                        formData.attributes[fieldName] = input.checked;
+                    } else if (input.type === 'number') {
+                        formData.attributes[fieldName] = parseFloat(input.value);
+                    } else {
+                        formData.attributes[fieldName] = input.value;
+                    }
                 } else {
-                    formData.attributes[fieldName] = element.value;
+                    const select = group.querySelector('select');
+                    formData.attributes[select.name] = select.value;
                 }
             }
         });
@@ -317,47 +337,26 @@ document.addEventListener("DOMContentLoaded", async function (){
     // Обработчик отправки формы
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
-        
-        // const typeId = typeSelect.value;
-        // if (!typeId) {
-        //     alert('Выберите тип оборудования');
-        //     return;
-        // }
-
-        // const selectedType = equipmentTypes.find(t => t.id == typeId);
-        // const formData = {
-        //     type: typeId,
-        //     inventory_number: document.getElementById('inventoryNumber').value,
-        //     attributes: {}
-        // };
-
-        // // Собираем атрибуты
-        // for (const [fieldName] of Object.entries(selectedType.attributes_schema)){
-        //     const input = document.getElementById(`attr_${fieldName}`);
-        //     if (!input) continue;
-
-        //     let value;
-        //     if (input.type === 'checkbox') {
-        //         value = input.checked;
-        //     } else if (input.type === 'number') {
-        //         value = parseFloat(input.value);
-        //     } else {
-        //         value = input.value;
-        //     }
-
-        //     formData.attributes[fieldName] = value;
-        // }
+        const response = await fetch(server + 'api/addequipment/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(collectFormData())
+        })
         try{
-            const response = await fetch(server + 'api/addequipment/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify(collectFormData())
-            })
-
-            if (response.ok){
+            if (!response.ok){
+                const errorData = await response.json();
+                // Обработка ошибок валидации DRF
+                if (errorData) {
+                    // Пример: errorData = {"type_id": ["Тип оборудования обязателен"]}
+                    // или errorData = {"attributes": {"field1": "Это поле обязательно"}}
+                    console.error("Ошибки валидации:", errorData);
+                    throw errorData; // Можно пробросить дальше или обработать
+                }
+            }
+            else {
                 window.location.href = server + ""
             }
         }
@@ -375,7 +374,7 @@ document.addEventListener("DOMContentLoaded", async function (){
         const label = document.createElement('label');
         label.textContent = config.label || fieldName;
         container_header.appendChild(label);
-        container.className = 'list-container';
+        fieldGroup.name = fieldName;
 
         const itemsContainer = document.createElement('div');
         itemsContainer.className = 'list-container-body'
@@ -392,6 +391,7 @@ document.addEventListener("DOMContentLoaded", async function (){
             const itemDiv = document.createElement('div');
             
             const fieldsRow = document.createElement('div');
+            fieldsRow.className = "list-item";
             itemDiv.appendChild(fieldsRow);
 
             // Добавляем поля элемента
@@ -403,6 +403,7 @@ document.addEventListener("DOMContentLoaded", async function (){
                 let subInput;
                 
                 if (subConfig.type === 'select'){
+                    
                     subInput = document.createElement('select');
                     subConfig.options.forEach(opt => {
                         const option = document.createElement('option');
@@ -415,6 +416,7 @@ document.addEventListener("DOMContentLoaded", async function (){
                     subInput.type = subConfig.type || 'text';
                 }
                 subInput.className = "smallinput"
+                subInput.name = subField;
                 col.className = 'input_block smallrow';
                 // Добавим отображения label для input  
                 subInput.addEventListener("blur", function() {
@@ -453,6 +455,7 @@ document.addEventListener("DOMContentLoaded", async function (){
         container.appendChild(container_header);
         container.appendChild(itemsContainer);
         fieldGroup.appendChild(container);
+        fieldGroup.className = "form-group list-container";
         dynamicFieldsContainer.appendChild(fieldGroup);
     }
 

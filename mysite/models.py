@@ -101,7 +101,7 @@ class CabinetPhoto(models.Model):
 
 class EquipmentType(models.Model):
     """Модель типа оборудования кабинета"""
-    name = models.CharField("Название", max_length=100) # Название оборудования пр. Компьютер / Ноутбук
+    name = models.CharField("Название", max_length=100, unique=True) # Название оборудования пр. Компьютер / Ноутбук
     description = models.TextField("Описание", blank=True)
     attributes_schema = models.JSONField("Характеристики", default=dict) # Схема атрибутов типа оборудования
     
@@ -138,7 +138,7 @@ class Equipment(models.Model):
         return self.type.name
     
     def __str__(self):
-        return self.type.name + self.inventory_number
+        return self.type.name + " " + self.inventory_number
 
     class Meta:
         verbose_name = "Оборудование"

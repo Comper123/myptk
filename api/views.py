@@ -21,27 +21,16 @@ class EquipmentTypesViewSet(viewsets.ModelViewSet):
     
 
 class AddEquipmentView(APIView):
-    permission_classes = [IsAuthenticated]
-    
-    @method_decorator(csrf_exempt)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-    
     def post(self, request, format=None):
-        serializer = EquipmentCreateSerializer(data=request.data, context={'request': request})
-        
+        serializer = EquipmentCreateSerializer(data=request.data)
         if serializer.is_valid():
-            # Добавляем текущего пользователя как создателя
             equipment = serializer.save()
-            
             return Response({
                 'status': 'success',
-                'data': serializer.data,
-                'message': 'Оборудование успешно добавлено'
+                'data': serializer.data
             }, status=status.HTTP_201_CREATED)
         
         return Response({
             'status': 'error',
-            'errors': serializer.errors,
-            'message': 'Ошибка валидации данных'
+            'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
