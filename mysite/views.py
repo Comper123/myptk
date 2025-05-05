@@ -28,19 +28,24 @@ def register_view(request):
     """
     Обработчик регистрации в системе
     """
+    data = {}
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             return redirect("/login") # Перенаправляем на вход
+        else:
+            data["message"] = "Ошибка валидации"
     else:
         form = RegisterForm()
-    return render(request, 'account/register.html', {'form': form})
+    data['form'] = form
+    return render(request, 'account/register.html', data)
     
     
 def login_view(request):
     """
     Обработчик страницы авторищзации в системе
     """
+    data = {}
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -48,9 +53,12 @@ def login_view(request):
             login(request, user)  # Используем встроенный login Django
             messages.success(request, f"Вы успешно вошли как {user.username}!")
             return redirect("/floor/1") # Перенаправляем на главную
+        else:
+            data["message"] = "Ошибка валидации"
     else:
         form = LoginForm()
-    return render(request, 'account/login.html', {'form': form})
+    data['form'] = form
+    return render(request, 'account/login.html', data)
 
 
 def logout_view(request):

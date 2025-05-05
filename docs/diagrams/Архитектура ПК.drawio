@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36 Edg/136.0.0.0" version="26.2.14">
+  <diagram id="rAG8T4HZwGrHt0T3zGCi" name="Страница — 1">
+    <mxGraphModel dx="1037" dy="589" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4e-YR97BaK9OGOgj_7pu-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-1" value="MySQL" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="160" y="140" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-3" value="Сервер" style="swimlane;startSize=20;horizontal=1;containerType=tree;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};" vertex="1" parent="1">
+          <mxGeometry x="290" y="60" width="410" height="270" as="geometry">
+            <mxRectangle x="310" y="50" width="90" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-10" value="Оборудование" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-3">
+          <mxGeometry x="10" y="35" width="180" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-14" value="Проверка прав" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-10">
+          <mxGeometry x="30" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-15" value="CRUD оборудования" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-10">
+          <mxGeometry x="30" y="115" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-11" value="Модуль авторизации" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-3">
+          <mxGeometry x="210" y="35" width="180" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-12" value="Проверка данных" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-11">
+          <mxGeometry x="30" y="35" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-13" value="Авторизация" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-11">
+          <mxGeometry x="30" y="115" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="4e-YR97BaK9OGOgj_7pu-9" target="4e-YR97BaK9OGOgj_7pu-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-9" value="Модуль среды разработки" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="435" y="400" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="4e-YR97BaK9OGOgj_7pu-16">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700.0000000000002" y="190.16666666666674" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-16" value="Клиентское приложение" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="840" y="10" width="180" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-17" value="Главная" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-16">
+          <mxGeometry x="30" y="35" width="120" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-18" value="Страница входа" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-16">
+          <mxGeometry x="30" y="80" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-20" value="Страница регистрации" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-16">
+          <mxGeometry x="30" y="130" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-21" value="Страница кабинета" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-16">
+          <mxGeometry x="30" y="180" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-22" value="Страница добавления оборудования" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-16">
+          <mxGeometry x="30" y="230" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4e-YR97BaK9OGOgj_7pu-29" value="Страница оборудования" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="4e-YR97BaK9OGOgj_7pu-16">
+          <mxGeometry x="30" y="290" width="120" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

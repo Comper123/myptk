@@ -10,17 +10,39 @@
 {% endblock %}
 
 {% block content %}
+{% if form.errors %}
+    {% include "blocks/popup.html" with msg=message type="error" %}
+{% endif %}
 <section class="login">
     <h2>Войдите в систему</h2>
 
     <form method="post"  autocomplete="off">
         {% csrf_token %}
+        {% for error in form.username.errors %}
+            <p class="text-danger">{{ error }}</p>
+        {% endfor %}
         <div class="input_block">
-            {{ form.username }}
+            <input 
+            type="text" 
+            class="{% if form.username.errors %}incorrect{% endif %}" 
+            id="{{ form.username.id_for_label }}"
+            name="{{ form.username.html_name }}"
+            value="{{ form.username.value|default:'' }}"
+            autocomplete="username"
+            >
             <label for="username">Имя пользователя</label>
         </div>
+        {% for error in form.password.errors %}
+            <p class="text-danger">{{ error }}</p>
+        {% endfor %}
         <div class="input_block">
-            {{ form.password }}
+            <input 
+            type="password" 
+            class="{% if form.password.errors %}incorrect{% endif %}" 
+            id="{{ form.password.id_for_label }}"
+            name="{{ form.password.html_name }}"
+            autocomplete="current-password"
+            >
             <label for="password">Пароль</label>
         </div>
         <button type="submit">Войти</button>
@@ -30,5 +52,5 @@
         </div>
     </form>
 </section>
-
+<script src="{% static 'js/hastext.js' %}"></script>
 {% endblock %}

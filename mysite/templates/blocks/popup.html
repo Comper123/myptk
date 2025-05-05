@@ -1,0 +1,78 @@
+<style>
+.pop-up{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transition: 1s;
+    width: 500px;
+    height: 60px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 20px;
+    p{
+        font-weight: 600;
+        font-size: 18px;
+    }
+}
+.success{
+    background-color: #00ff2657;
+}
+
+.error{
+    background-color: #FF000057;
+}
+
+.error-text{
+    color: var(--red);
+}
+.success-text{
+    color: var(--green);
+}
+.closeButton{
+    width: 30px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
+    span{
+        border: 2px solid black;
+        position: absolute;
+        background-color: black;
+        border-radius: 2px;
+        height: 100%;
+    }
+    .left{
+        transform: rotate(45deg);
+    }
+    .right{
+        transform: rotate(-45deg);
+    }
+}
+</style>
+
+<div class="pop-up {% if type == "error" %} error {% elif type == "success" %} success {% endif %}">
+    {% if type == "error" %}
+        <p class="error-text">{{ msg }}</p>
+    {% elif type == "success" %}
+        <p class="success-text">{{ msg }}</p>
+    {% endif %}
+    <a onclick="closePopUp()" class="closeButton">
+        <span class="left"></span>
+        <span class="right"></span>
+    </a>
+</div>
+
+<script>
+    const popup = document.querySelector(".pop-up");
+    popup.style.transform = "translate(-50%, -100px)";
+    setTimeout(()=>{
+        popup.style.transform = "translate(-50%, 50px)";
+    }, 100)
+    setTimeout(()=>{
+        popup.style.transform = "translate(-50%, -100px)";
+    }, 3000)
+    function closePopUp(){
+        popup.style.transform = "translate(-50%, -100px)";
+    }
+</script>

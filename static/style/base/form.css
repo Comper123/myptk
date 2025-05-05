@@ -93,18 +93,28 @@ form{
             height: 100%;
             font-size: 1em;
             &:focus,
-            &:valid{
+            &.hastext{
                 border: none;
                 outline: 2px solid var(--main-blue);
             }
             &:focus ~ label,
-            &:valid ~ label{
+            &.hastext ~ label{
                 transform: translateY(-2.3em);
                 color: var(--main-blue);
                 transition: .4s;
             }
         }
         
+        input.incorrect{
+            &:focus,
+            &.hastext{
+                outline: 2px solid var(--red);
+            }
+            &:focus ~ label,
+            &.hastext ~ label{
+                color: var(--red);
+            }
+        }
         label{
             position: absolute;
             z-index: 100;
@@ -124,4 +134,9 @@ form{
 
 .text-danger{
     color: red;
+}
+
+.form-error{
+    color: red;
+    transform: translateY(-16px);
 }

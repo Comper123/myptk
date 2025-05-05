@@ -27,12 +27,15 @@ class LoginForm(Form):
             try:
                 u = User.objects.get(username=username)
                 if not(u.is_active) and u.last_login is None:
-                    raise ValidationError("Ваша заявка еще не подтверждена")
+                    self.add_error('username', "Ваша заявка еще не подтверждена.")
                 else:
                     # Сохраняем пользователя для дальнейшего использования
                     self.user_cache = authenticate(username=username, password=password)  
+                    if not(self.user_cache):
+                        self.add_error('password', "Неверный пароль.")  
             except (User.DoesNotExist):
-                raise ValidationError("Неверное имя пользователя или пароль.")
+                # Добавим ошибку
+                self.add_error('username', "Такого пользователя не существует.")
 
     def get_user(self):
         return self.user_cache  # Возвращаем аутентифицированного пользователя
