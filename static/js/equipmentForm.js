@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async function (){
     // Получаем необходимые элементы
     const form = document.getElementById('equipmentForm');
     const typeSelect = document.getElementById('equipmentType');
+    const roomSelect = document.getElementById("room");
     const dynamicFieldsContainer = document.getElementById('dynamicFieldsContainer');
     const basefieldsblock = document.querySelector(".basefields");
     const baseinputs = basefieldsblock.querySelectorAll('input');
@@ -23,8 +24,13 @@ document.addEventListener("DOMContentLoaded", async function (){
     
     // Загрузка типов оборудования
     let equipmentTypes = [];
-    const response = await fetch(server + 'api/equipmenttypes', {'method': "GET"})
+    const response = await fetch(server + 'api/equipmenttypes', {'method': "GET"});
     equipmentTypes = await response.json();
+
+    // Загрузка кабинетов
+    rooms = []
+    const roomsresponse = await fetch(server + 'api/rooms', {'method': 'GET'});
+    rooms = await roomsresponse.json();
 
     // Заполняем селект типов
     equipmentTypes.forEach(type => {
@@ -32,6 +38,14 @@ document.addEventListener("DOMContentLoaded", async function (){
         option.value = type.id;
         option.textContent = type.name;
         typeSelect.appendChild(option);
+    });
+
+    // Заполняем select кабинета
+    rooms.forEach(room => {
+        const option = document.createElement('option');
+        option.value = room.id;
+        option.textContent = room.name;
+        roomSelect.appendChild(option);
     });
 
     // Обработчик изменения типа
@@ -269,7 +283,8 @@ document.addEventListener("DOMContentLoaded", async function (){
     // Собиратель данных с полей
     function collectFormData() {
         const formData = {
-            type: typeSelect.innerText,
+            type: typeSelect.value,
+            room_id: roomSelect.value,
             inventory_number: document.getElementById('inventoryNumber').value,
             attributes: {}
         };
@@ -357,7 +372,7 @@ document.addEventListener("DOMContentLoaded", async function (){
                 }
             }
             else {
-                window.location.href = server + ""
+                window.location.href = server + "floor/1"
             }
         }
         catch (error){

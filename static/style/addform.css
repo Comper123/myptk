@@ -68,6 +68,7 @@
             option{
                 color: black !important;
             }
+            
         }
         button{
             background-color: var(--main-blue-opacity);
@@ -226,7 +227,8 @@
             }
             select{
                 &:focus ~ label,
-                &.empty-on-blur ~ label{
+                &.empty-on-blur ~ label,
+                &.hastext ~ label{
                     color: var(--main-blue);
                     transition: .4s;
                 }
@@ -242,7 +244,9 @@
                 font-size: 1em;
                 background-color: white;
                 color: var(--dark-grey);
-                
+                &:has(+ select){
+                    top: -10px;
+                }
             }
             input ~ label{
                 top: 50%;

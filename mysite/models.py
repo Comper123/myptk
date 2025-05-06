@@ -28,7 +28,7 @@ class Floor(models.Model):
 class Room(models.Model):
     """Модель кабинета"""
     floor = models.ForeignKey(Floor, on_delete=models.PROTECT, related_name="rooms")
-    name = models.CharField("Номер", max_length=5)
+    name = models.CharField("Номер", max_length=5, unique=True)
     coords = models.TextField("Координаты", max_length=250, null=True, blank=True)
     description = models.TextField("Описание", null=True, blank=True)
     map_image = models.ImageField("План", null=True, blank=True, upload_to="roommaps/")
@@ -121,7 +121,7 @@ class Equipment(models.Model):
         ('broken', "Неисправен")
     ]
     type = models.ForeignKey(EquipmentType, on_delete=models.PROTECT, verbose_name="Тип оборудования")
-    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Кабинет")
+    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Кабинет", related_name="equipments")
     inventory_number = models.CharField("Инвентарный номер", max_length=50, unique=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='working')
     # ^ Не активное оборудование = списанное (is_active=False -> Списанное оборудование)
@@ -132,7 +132,7 @@ class Equipment(models.Model):
     created_at = models.DateTimeField("Дата добавления", auto_now_add=True)
     updated_at = models.DateTimeField("Дата изменения", auto_now=True)
     image = models.ImageField("Фотография", upload_to="equipmentimages/", default="equipmentimages/default.png")
-    coords = models.CharField("Координаты", max_length=100, null=True, blank=False)
+    coords = models.CharField("Координаты", max_length=100, null=True, blank=True)
     
     def type_name(self):
         return self.type.name

@@ -3,7 +3,7 @@ from django.apps import apps
 
 EquipmentType = apps.get_model('mysite', 'EquipmentType')
 Equipment = apps.get_model('mysite', "Equipment")
-
+Room = apps.get_model('mysite', "Room")
 
 
 class EquipmentTypeSerializer(serializers.ModelSerializer):
@@ -11,20 +11,23 @@ class EquipmentTypeSerializer(serializers.ModelSerializer):
         model = EquipmentType
         fields = ['id', 'name', 'attributes_schema']
     
+
+    
     
 class EquipmentCreateSerializer(serializers.ModelSerializer):
-    # type_id = serializers.PrimaryKeyRelatedField(
-    #     queryset=EquipmentType.objects.all(),
-    #     source='type',
-    #     write_only=True
-    # )
+    room_id = serializers.PrimaryKeyRelatedField(
+        queryset=Room.objects.all(),
+        source='room',  # Указываем, что записываем в поле room модели
+        write_only=True,
+        required=False,  # Если кабинет может быть не указан
+        allow_null=True  # Разрешаем null значение
+    )
     
     class Meta:
         model = Equipment
-        fields = ['type', 'inventory_number', 'attributes']
+        fields = ['type', 'room_id', 'inventory_number', 'attributes']
     
     def validate(self, attrs):
-        print(attrs)
         typeName = attrs.get('type')
         attributes = attrs.get('attributes', {})
         
@@ -32,7 +35,9 @@ class EquipmentCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"type": "Тип оборудования обязателен"}
             )
+            
         equipment_type = EquipmentType.objects.get(name=typeName)
+        
         
         # Валидация атрибутов по схеме типа
         self._validate_attributes(equipment_type.attributes_schema, attributes)

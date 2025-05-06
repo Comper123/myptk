@@ -37,6 +37,38 @@
     </div>
     <div id="devices_block" class="tab">
         <a href="/addequipment" class="link">Добавить оборудования</a>
+        <div class="equipments_block">
+            {% for e in room.equipments.all %}
+                <div class="equipment">
+                    <p class="name">{{ e.type.name }} <span class="number">{{ e.inventory_number }}</span></p>
+                    <div class="haracters">
+                        <div class="manage_block">
+                            <img src="/media/{{ e.image }}" alt="">
+                        </div>
+                        <div class="har_block">
+                            {% for key, value in e.attributes.items %}
+                                {% if value %}
+                                <div class="haracter">
+                                    <div>
+                                        <p>{{ key }}</p>
+                                    </div>
+                                    <div>
+                                        <p>{{ value }}</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <a href="" class="move">Переместить</a>
+                        <a href="" class="activechange">Списать</a>
+                        <a href="" class="edit">Редактировать</a>
+                        <a href="" class="delete">Удалить</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
     <div id="room_info_block" class="tab">
         <div class="haracteristic_block">

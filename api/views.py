@@ -11,6 +11,7 @@ from rest_framework import status
 
 EquipmentType = apps.get_model('mysite', 'EquipmentType')
 Equipment = apps.get_model('mysite', "Equipment")
+Room = apps.get_model('mysite', "Room")
 
 
 # Create your views here.
@@ -34,3 +35,14 @@ class AddEquipmentView(APIView):
             'status': 'error',
             'errors': serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RoomsView(APIView):
+    def get(self, request):
+        return Response([
+            {
+                "id": r.id,
+                "name": r.name
+            }
+            for r in Room.objects.all()
+        ], status=status.HTTP_200_OK)

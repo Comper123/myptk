@@ -20,6 +20,13 @@
                     <option value="">Выберите тип</option>
                 </select>
             </div>
+            <div class="input_block form-group">
+                
+                <select class="" id="room" required>
+                    <option value="">Выберите кабинет</option>
+                </select>
+                <label for="room" class="form-label">Кабинет<span class="text-danger"> *</span></label>
+            </div>
             <div class="input_block">
                 <input type="text" class="form-control" id="inventoryNumber" required>
                 <label for="inventoryNumber" class="form-label">Инвентарный номер<span class="text-danger"> *</span></label>
@@ -36,4 +43,6 @@
     </form>
 </div>
 <script src="{% static 'js/equipmentForm.js' %}"></script>
+<script src="{% static 'js/hastext.js' %}"></script>
+
 {% endblock %}
