@@ -11,7 +11,9 @@ from . models import (
     User, 
     CabinetPhoto,
     Equipment,
-    EquipmentType
+    EquipmentType,
+    EquipmentMovementLog,
+    EquipmentDiscardLog
 )
 
 
@@ -78,3 +80,18 @@ class EquipmentAdmin(admin.ModelAdmin):
     formfield_overrides = {
         JSONField: {'widget': JSONEditorWidget},
     }
+
+
+@admin.register(EquipmentMovementLog)
+class EquipmentMovementLogAdmin(admin.ModelAdmin):
+    list_display = ["equipment", "from_location", "to_location", "moved_by", "moved_at"]
+    list_filter = ["moved_at", "moved_by"]
+    search_fields = ["equipment__inventory_number"]
+    
+    
+@admin.register(EquipmentDiscardLog)
+class EquipmentDiscardLogAdmin(admin.ModelAdmin):
+    list_display = ["equipment", "discard_by", "discard_at"]
+    list_filter = ["discard_at", "discard_by"]
+    search_fields = ["equipment__inventory_number"]
+    

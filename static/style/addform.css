@@ -70,7 +70,7 @@
             }
             
         }
-        button{
+        button, .form-button{
             background-color: var(--main-blue-opacity);
             height: 50px;
             border-radius: 8px;

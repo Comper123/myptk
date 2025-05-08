@@ -31,7 +31,8 @@ form{
     input[type="text"],
     input[type="password"],
     input[type="email"],
-    input[type="number"]{
+    input[type="number"],
+    input[type="date"]{
         border: 2px solid var(--dark-grey);
         border-radius: 8px;
         padding-left: 12px;
@@ -54,7 +55,7 @@ form{
             color: black !important;
         }
     }
-    button{
+    button, .form-button{
         background-color: var(--main-blue-opacity);
         height: 50px;
         border-radius: 8px;
@@ -62,12 +63,18 @@ form{
         font-weight: 600;
         border: none;
         font-size: 1em;
+        width: max-content;
         cursor: pointer;
         padding: 10px 25px;
         transition: .4s;
         &:hover{
             background-color: var(--main-blue);
         }
+    }
+    .form-button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .help{
         display: flex;

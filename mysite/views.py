@@ -5,8 +5,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
+from django.core.cache import cache
 
-from . forms import LoginForm, RegisterForm
+from . forms import LoginForm, RegisterForm, EquipmentFilterForm
 from . import models
 
 
@@ -71,10 +73,60 @@ def logout_view(request):
 
 
 def cabinet_view(request, cab):
-    data = {
-        'room': models.Room.objects.get(name=cab)
+    # Получаем текущие параметры GET-запроса
+    get_params = request.GET.copy()
+    
+    # Удаляем параметр page из копии (чтобы не дублировался)
+    if 'page' in get_params:
+        del get_params['page']
+    
+    # Формируем строку параметров для пагинации
+    params = get_params.urlencode()
+    
+    room = models.Room.objects.get(name=cab)
+    context = {
+        'room': room
     }
-    return render(request, "cabinet.html", data)
+    queryset = models.Equipment.objects.filter(room=room)
+    form = EquipmentFilterForm(request.GET)
+    
+    if form.is_valid():
+        data = form.cleaned_data
+        
+        # Фильтрация по поисковому запросу
+        if data['search']:
+            queryset = queryset.filter(
+                # models.models.Q(name__icontains=data['search']) |
+                models.models.Q(inventory_number__icontains=data['search'])
+            )
+        
+        # Фильтрация по типу
+        if data['equipment_type']:
+            eq_type = models.EquipmentType.objects.get(name=data['equipment_type'])
+            queryset = queryset.filter(type=eq_type)
+        
+        # Фильтрация по статусу
+        if data['status']:
+            queryset = queryset.filter(status=data['status'])
+        
+        # Фильтрация по дате
+        if data['purchase_date_from']:
+            queryset = queryset.filter(purchase_date__gte=data['purchase_date_from'])
+        
+        if data['purchase_date_to']:
+            queryset = queryset.filter(purchase_date__lte=data['purchase_date_to'])
+    
+    # Пагинация
+    paginator = Paginator(queryset, 10)  # 10 элементов на странице
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context['page_obj'] = page_obj
+    context['form'] = form
+    context['query_params'] = params
+    
+    return render(request, "cabinet.html", context)
+
 
 
 @csrf_exempt # Отключаем CSRF для этого view

@@ -5,9 +5,13 @@ from django.forms import (
     ValidationError, 
     TextInput,
     EmailInput,
-    Select
+    Select,
+    ModelForm,
+    ChoiceField,
+    DateField,
+    DateInput
 )
-from . models import User
+from . models import User, Equipment, EquipmentType
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import Group
 
@@ -85,5 +89,34 @@ class RegisterForm(Form):
         # Добавим пользователя в группу
         user.groups.set(Group.objects.filter(name=gr_name))
         
-        
-        
+
+class EquipmentFilterForm(Form):
+    search = CharField(
+        required=False,
+        label='Поиск',
+        widget=TextInput(attrs={'placeholder': 'Название или инв. номер'})
+    )
+    
+    equipment_type = ChoiceField(
+        choices=[('', 'Все типы')] + [(eq.name, eq.name) for eq in EquipmentType.objects.all()],
+        required=False,
+        label='Тип оборудования'
+    )
+    
+    status = ChoiceField(
+        choices=[('', 'Все статусы')] + Equipment.STATUS_CHOICES,
+        required=False,
+        label='Статус'
+    )
+    
+    purchase_date_from = DateField(
+        required=False,
+        label='Дата от',
+        widget=DateInput(attrs={'type': 'date'})
+    )
+    
+    purchase_date_to = DateField(
+        required=False,
+        label='Дата до',
+        widget=DateInput(attrs={'type': 'date'})
+    )

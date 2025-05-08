@@ -3,7 +3,11 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.apps import apps
-from .serializers import EquipmentTypeSerializer, EquipmentCreateSerializer
+from .serializers import (
+    EquipmentTypeSerializer, 
+    EquipmentCreateSerializer,
+    EquipmentSerializer
+)
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from rest_framework.response import Response
@@ -22,6 +26,7 @@ class EquipmentTypesViewSet(viewsets.ModelViewSet):
     
 
 class AddEquipmentView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
         serializer = EquipmentCreateSerializer(data=request.data)
         if serializer.is_valid():
@@ -38,6 +43,7 @@ class AddEquipmentView(APIView):
 
 
 class RoomsView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         return Response([
             {
@@ -46,3 +52,38 @@ class RoomsView(APIView):
             }
             for r in Room.objects.all()
         ], status=status.HTTP_200_OK)
+
+
+class EqupmentView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, equipment_id):
+        eq = Equipment.objects.get(id=equipment_id)
+        return Response({
+            "id": eq.id,
+            "inventory_number": eq.inventory_number,
+            "name": eq.type.name + " " + str(eq.inventory_number),
+            "room_id": eq.room.id
+        }, status=status.HTTP_200_OK)
+        
+
+class EquipmentMoveView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        equipment = Equipment.objects.get(id=request.data["eq_id"])
+        room = Room.objects.get(id=request.data["room_id"])
+        equipment.room = room
+        equipment.save(moved_by=request.user)
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+class EquipmentDiscardView(APIView):
+    """Обработчик списания оборудования"""
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        equipment = Equipment.objects.get(id=request.data["eq_id"])
+        equipment.is_active = False
+        equipment.save(discard_by=request)
+        return Response({}, status=status.HTTP_204_NO_CONTENT)

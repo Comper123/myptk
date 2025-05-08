@@ -1,0 +1,103 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.15 Chrome/134.0.6998.205 Electron/35.2.1 Safari/537.36" version="26.2.15">
+  <diagram name="Страница — 1" id="gCwvHChxfD29UXXB_5PC">
+    <mxGraphModel dx="1026" dy="849" grid="0" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="As7qwfMZufopB4u34TcM-1" value="Начало" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-2" value="Вывод формы поиска и фильтрации оборудования" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="120" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-3" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="As7qwfMZufopB4u34TcM-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="130" as="sourcePoint" />
+            <mxPoint x="460" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-4" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="459.58" y="220" as="sourcePoint" />
+            <mxPoint x="459.58" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-5" value="Заполнение формы поиска оборудования" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-6" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="459.58" y="320" as="sourcePoint" />
+            <mxPoint x="459.58" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-7" value="Отправка формы" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-9" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="459.58" y="420" as="sourcePoint" />
+            <mxPoint x="459.58" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-10" value="Отображение отфильтрованных записей оборудования" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="625" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-11" value="Форма валидна?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="420" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-12" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="459.76" y="530" as="sourcePoint" />
+            <mxPoint x="459.76" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-13" value="Да" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="410" y="490" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-14" value="Вывод ошибок в форме" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-18" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="As7qwfMZufopB4u34TcM-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="620" y="250" as="sourcePoint" />
+            <mxPoint x="460" y="100" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="620" y="100" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-19" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="As7qwfMZufopB4u34TcM-11" target="As7qwfMZufopB4u34TcM-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="610" y="510" as="sourcePoint" />
+            <mxPoint x="660" y="460" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="620" y="455" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-20" value="Сбор обработчиком всего подходящего по фильтрам оборудования" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="525" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-21" value="Нет" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="510" y="420" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-22" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="459.85999999999996" y="625" as="sourcePoint" />
+            <mxPoint x="459.85999999999996" y="585" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-23" value="" style="endArrow=none;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="459.75999999999993" y="725" as="sourcePoint" />
+            <mxPoint x="459.75999999999993" y="685" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="As7qwfMZufopB4u34TcM-24" value="Конец" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="400" y="725" width="120" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

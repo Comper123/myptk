@@ -6,10 +6,46 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'style/room.css' %}">
+    <link rel="stylesheet" href="{% static 'style/base/form.css' %}">
     <link rel="stylesheet" href="{% static 'style/base/characters.css' %}">
 {% endblock %}
 
 {% block content %}
+
+<div class="modal" id="myModal">
+    <div id="movemenu" class="modal-content">
+        <div>
+            <h1>Перемещение оборудования</h1>
+            <p class="eqname"></p>
+            <p class="help">В какой кабинет вы хотите переместить оборудование</p>
+            <form action="">
+                <div class="input_block">
+                    <select name="" id="roomselect" class="roomselect">
+
+                    </select>
+                </div>
+                <button type="button" class="form-button">Переместить</button>
+            </form>
+            
+        </div>
+        <span class="close">&times;</span>
+    </div>
+</div>
+
+<div class="modalActive" id="modalActive">
+    <div class="modal-content">
+        <div>
+            <h1>Списание оборудования</h1>
+            <p class="eqname"></p>
+            <form action="">
+                <button type="button" class="form-button">Списать</button>
+            </form>
+            
+        </div>
+        <span class="close">&times;</span>
+    </div>
+</div>
+
 <div class="path">
     <a class="path_elem" href="/floor/{{ room.floor.name }}">{{ room.floor.name }} этаж</a>
     <p class="separator">/</p>
@@ -25,20 +61,56 @@
 
 <!-- Остальные блоки страницы кабинета -->
 <nav class="tabs_links" id="tabs_links">
-    <a id="assistants_requests_link" class="active" data-id="1">Заявки лаборантов</a>
-    <a id="devices_link" data-id="2">Оборудование</a>
+    <a id="devices_link" data-id="1" class="active">Оборудование</a>
+    <a id="assistants_requests_link" data-id="2">Заявки лаборантов</a>
     <a id="room_info_link" data-id="3">О кабинете</a>
     <a id="photos_link" data-id="4">Фотографии</a>
 </nav>
 
 <section class="tabs" id="tabs">
-    <div id="assistants_requests_block" class="tab active_tab">
-
-    </div>
-    <div id="devices_block" class="tab">
-        <a href="/addequipment" class="link">Добавить оборудования</a>
+    <div id="devices_block" class="tab active_tab">
+        <!-- Сохранение параметров при пагинации -->
+        {% with request.GET.urlencode as query_string %}
+        <div class="filterform">
+            <form method="get" class="mb-4">
+                <input type="hidden" name="page" value="1">  <!-- Сброс на первую страницу при новом поиске -->
+  
+                <!-- Для каждого существующего параметра (кроме page) -->
+                {% for key, value in request.GET.items %}
+                    {% if key != 'page' %}
+                    <input type="hidden" name="{{ key }}" value="{{ value }}">
+                    {% endif %}
+                {% endfor %}
+                
+                <div>
+                    <div>
+                        {{ form.search }}
+                    </div>
+                    <div>
+                        {{ form.equipment_type }}
+                    </div>
+                    <div>
+                        {{ form.status }}
+                    </div>
+                    <div>
+                        {{ form.purchase_date_from }}
+                    </div>
+                    <div>
+                        {{ form.purchase_date_to }}
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary w-100">Поиск</button>
+                    </div>
+                    <div>
+                        <a href="/cabinets/{{room.name}}" class="link">Сбросить фильтры</a>
+                    </div>
+                </div>
+            </form>
+            <a href="/addequipment" class="link">Добавить оборудование</a>
+        </div>
+        {% if page_obj %}
         <div class="equipments_block">
-            {% for e in room.equipments.all %}
+            {% for e in page_obj %}
                 <div class="equipment">
                     <p class="name">{{ e.type.name }} <span class="number">{{ e.inventory_number }}</span></p>
                     <div class="haracters">
@@ -61,14 +133,60 @@
                         </div>
                     </div>
                     <div class="buttons">
-                        <a href="" class="move">Переместить</a>
-                        <a href="" class="activechange">Списать</a>
+                        <a class="move" onclick="moveequipment({{ e.id }})">Переместить</a>
+                        <a class="activechange" onclick="setEquipmentActive({{ e.id }})">Списать</a>
                         <a href="" class="edit">Редактировать</a>
                         <a href="" class="delete">Удалить</a>
                     </div>
                 </div>
             {% endfor %}
         </div>
+        {% endif %}
+        {% endwith %}
+        <!-- Пагинация -->
+        {% if page_obj %}
+            {% if page_obj.paginator.num_pages > 1 %}
+                <nav class="navigation_block">
+                    {% if page_obj.has_previous %}
+                        <a class="page-link" 
+                            href="?{% if query_params %}{{ query_params }}&{% endif %}page=1">
+                            <<
+                        </a>
+                        <a class="page-link" 
+                            href="?{% if query_params %}{{ query_params }}&{% endif %}page={{ page_obj.previous_page_number }}">
+                            <
+                        </a>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if num == page_obj.number %}
+                            <a class="active">
+                                {{ num }}
+                            </a>
+                        {% else %}
+                            <a class="page-link" href="?{% if query_params %}{{ query_params }}&{% endif %}page={{ num }}">
+                                {{ num }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <a class="page-link" 
+                            href="?{% if query_params %}{{ query_params }}&{% endif %}page={{ page_obj.next_page_number }}">
+                            >
+                        </a>
+                        <a class="page-link" 
+                            href="?{% if query_params %}{{ query_params }}&{% endif %}page={{ page_obj.paginator.num_pages }}">
+                            >>
+                        </a>
+                    {% endif %}
+                    </ul>
+                </nav>  
+            {% endif %}
+        {% else %}
+            <p class="notfound">Оборудование не найдено</p>
+        {% endif %}
+    </div>
+    <div id="assistants_requests_block" class="tab">
+
     </div>
     <div id="room_info_block" class="tab">
         <div class="haracteristic_block">
@@ -181,29 +299,8 @@
         </div>
     </div>
 </section>
-<script>
-    const slider_indicators_block = document.querySelector(".slider_indicators");
-    const slider_indicators = slider_indicators_block.querySelectorAll(".indicator");
-    
-    const slider_images_block = document.querySelector(".slider_container");
-    const slider_images = slider_images_block.querySelectorAll(".img");
-    
-    
-    function toSlide(slide){
-        // Сбросим старые изображения
-        for (let i = 0; i < slider_images.length; i++){
-            slider_images[i].classList = "img";
-        }
-        // Установим новое изображение
-        slider_images[slide - 1].classList = "img active";
-    
-        // Сбросим старые кнопки
-        for (let i = 0; i < slider_indicators.length; i++){
-            slider_indicators[i].classList = "indicator";
-        }
-        // Установим новое изображение
-        slider_indicators[slide - 1].classList = "indicator active";
-    }
-</script>
 <script src="{% static 'js/tabs.js' %}"></script>
+<script src="{% static 'js/roomImageSlider.js' %}"></script>
+<script type="module" src="{% static 'js/movemenu.js' %}"></script>
+<script type="module" src="{% static 'js/setEquipmentActive.js' %}"></script>
 {% endblock %}

@@ -12,6 +12,10 @@ class EquipmentTypeSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'attributes_schema']
     
 
+class EquipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Equipment
+        fields = ['id', 'inventory_number', 'type']
     
     
 class EquipmentCreateSerializer(serializers.ModelSerializer):
